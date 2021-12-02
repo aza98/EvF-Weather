@@ -48,16 +48,43 @@ struct ContentView: View {
                         temperature: 21)
                 }
                 Spacer()
-                //
+                Button {
+                    isNight.toggle()
+                } label: {
+                    WheatherButton(title: "Actualizar",
+                        textColor: .blue,
+                        backgroundColor: .white)
+                }
                 Spacer()
             }
         }
     }
 }
 
+struct WeatherView: View {
+
+    @ObservedObject var viewModel: WeatherViewModel
+
+    var body: some View {
+        VStack {
+            Text(viewModel.cityname)
+                .font(.largeTitle)
+                .padding()
+            Text(viewModel.temperature)
+                .font(.system(size: 70))
+                .bold()
+            Text(viewModel.weatherIcon)
+                .font(.largeTitle)
+                .padding()
+            Text(viewModel.weatherDescription)
+        }.onAppear(perform: viewModel.refresh)
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        WeatherView(viewModel: WeatherViewModel(weatherService:
+                WeatherService()))
     }
 }
 
@@ -66,7 +93,6 @@ struct WeatherDayView: View {
     var dayOfWeek: String
     var imageName: String
     var temperature: Int
-
     var body: some View {
         VStack {
             Text(dayOfWeek)
